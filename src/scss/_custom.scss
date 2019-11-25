@@ -1,0 +1,21 @@
+// Here you can add other styles
+body {
+	.card-header {
+		background-color: #eff4fb;
+	}
+	.ev-danger {
+		background-color: #f86c6b;
+		color: #eff4fb;
+	}
+	.ev-danger:hover {
+		background-color: #ee3d3d;
+		color: #eff4fb;
+	}
+	.ev-ticket-pre {
+		white-space: pre-wrap;       /* css-3 */
+		white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+		white-space: -pre-wrap;      /* Opera 4-6 */
+		white-space: -o-pre-wrap;    /* Opera 7 */
+		word-wrap: break-word;       /* Internet Explorer 5.5+ */
+	}
+}
