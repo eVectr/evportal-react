@@ -16,6 +16,9 @@ import {
 } from '@coreui/react';
 // sidebar nav config
 import super_admin_nav from '../../super_admin_nav';
+import support_super_nav from '../../support_super_nav';
+import support_agent_nav from '../../support_agent_nav';
+
 // routes config
 import routes from '../../routes';
 //import api_url from '../../config.js';
@@ -31,6 +34,7 @@ class DefaultLayout extends Component {
 		this.state = {
 			authData: "loading",
 			roles: [],
+			navType: "support_agent_nav",
 			apiUnavailable: false,
 		};
 	}
@@ -44,22 +48,32 @@ class DefaultLayout extends Component {
 					'x-access-token': localStorage.getItem('token')
 				},
 			}).then(results => results.json()).then(data => {
-				if(data.status===503) {
+				if (data.status===503) {
 					this.setState({
 						apiUnavailable: true
 					});
 					return false;
 				}
-				if(data.auth===false) {
+				if (data.auth===false) {
 					localStorage.removeItem("token");
 					this.setState({
 						authData: false
 					});
 				}  else if (data.auth===true) {
+					const myroles = JSON.parse(data.roles);
+					console.log(data.roles);
 					this.setState({
 						authData: JSON.parse(data.auth),
-						roles: JSON.parse(data.roles)
+						roles: myroles
 					});
+					console.log(myroles);
+					if (myroles.includes('super_admin')) {
+						this.setState({navType: "super_admin_nav"});
+					} else if (myroles.includes('support_super')) {
+						this.setState({navType: "support_super_nav"});
+					} else if (myroles.includes('support_agent')) {
+						this.setState({navType: "support_agent_nav"});
+					}
 				} else {
 					this.setState({
 						authData: false
@@ -82,7 +96,21 @@ class DefaultLayout extends Component {
 	}
 
 	render() {
+		
+		/*var navConfig = function() {
+			switch(navType) {
+				case 'super_admin':
+					return super_admin_nav;
+					break;
+				case 'support_super':
+					return support_super_nav;
+					break;
+				default:
+					return support_agent_nav;
+			}
+		}*/
 		if(this.state.authData === true) {
+			//const navType = this.state.navType;
 			return (
 				<div className="app">
 					<AppHeader fixed>
@@ -95,7 +123,20 @@ class DefaultLayout extends Component {
 							<AppSidebarHeader />
 							<AppSidebarForm />
 							<Suspense>
-								<AppSidebarNav navConfig={super_admin_nav} {...this.props} router={router}/>
+								<AppSidebarNav navConfig={
+									(() => {
+										switch (this.state.navType) {
+											case "super_admin_nav":   return super_admin_nav;
+											case "support_agent_nav": return support_agent_nav;
+											case "support_super_nav":  return support_super_nav;
+											default:      return support_agent_nav;
+										}
+									})()
+									/*()=>{switch(navType){
+									case 'super_admin_nav': return super_admin_nav; break;
+									case 'support_agent_nav': return support_agent_nav; break;
+									default: return support_agent_nav;
+								}}*/} {...this.props} router={router}/>
 							</Suspense>
 							<AppSidebarFooter />
 							<AppSidebarMinimizer />
