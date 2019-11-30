@@ -11,7 +11,8 @@ class User extends Component {
 			usersData: [],
 			userRoles: [],
 			super_admin: false,
-			support_agent: false
+			support_super: false,
+			support_agent: false,
 		};
 		this.handleRoleChange = this.handleRoleChange.bind(this);
 	}
@@ -34,6 +35,12 @@ class User extends Component {
 				if(super_admin.constructor.name === "Array" && super_admin.length > 0) {
 					this.setState({
 						super_admin: true
+					});
+				}
+				var support_super = JSON.parse(data.roles).filter(item => item.role_name.includes("support_super"));
+				if(support_super.constructor.name === "Array" && support_super.length > 0) {
+					this.setState({
+						support_super: true
 					});
 				}
 				var support_agent = JSON.parse(data.roles).filter(item => item.role_name.includes("support_agent"));
@@ -69,6 +76,18 @@ class User extends Component {
 			} else {
 				this.setState({
 					super_admin: false
+				})
+			}
+		}
+
+		if(name==="support_super") {
+			if(isChecked) {
+				this.setState({
+					support_super: true
+				});
+			} else {
+				this.setState({
+					support_super: false
 				})
 			}
 		}
@@ -145,12 +164,8 @@ class User extends Component {
 									<Label className="form-check-label" check htmlFor="support_agent">Support</Label>
 								</FormGroup>
 								<FormGroup check inline>
-									<Input className="form-check-input" type="checkbox" id="support-manager-role" name="support-manager-role" value="support-manager" onChange={this.handleRoleChange} />
-									<Label className="form-check-label" check htmlFor="support-manager-role">Support Manager</Label>
-								</FormGroup>
-								<FormGroup check inline>
-									<Input className="form-check-input" type="checkbox" id="admin-role" name="admin-role" value="admin" onChange={this.handleRoleChange} />
-									<Label className="form-check-label" check htmlFor="admin-role">Admin</Label>
+									<Input className="form-check-input" type="checkbox" id="support_super" name="support_super" value="support_super" onChange={this.handleRoleChange} checked={this.state.support_super} />
+									<Label className="form-check-label" check htmlFor="support_super">Support Manager</Label>
 								</FormGroup>
 								<FormGroup check inline>
 									<Input className="form-check-input" type="checkbox" id="super_admin" name="super_admin" value="super_admin" onChange={this.handleRoleChange} checked={this.state.super_admin} />
