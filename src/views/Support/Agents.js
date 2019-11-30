@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap';
 
-import api_url from '../../config.js'
-
 function UserRow(props) {
 	const user = props.user
 	const userLink = `/users/${user.user_id}`
@@ -28,7 +26,7 @@ class Agents extends Component {
 	}
 
 	componentDidMount() {
-		fetch(api_url+'/getagents', {
+		fetch(process.env.REACT_APP_API_URL+'/getagents', {
 			headers: {
 				'Content-Type': 'application/json',
 				'x-access-token': localStorage.getItem('token')

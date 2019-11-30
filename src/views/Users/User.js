@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Table, FormGroup, Label, Input  } from 'reactstrap';
-import api_url from '../../config.js'
 
 class User extends Component {
 
@@ -18,7 +17,7 @@ class User extends Component {
 	}
 
 	componentDidMount() {
-		fetch(api_url+'/getuser?id='+this.props.match.params.id, {
+		fetch(process.env.REACT_APP_API_URL+'/getuser?id='+this.props.match.params.id, {
 			headers: {
 				'Content-Type': 'application/json',
 				'x-access-token': localStorage.getItem('token')
@@ -86,7 +85,7 @@ class User extends Component {
 			}
 		}
 
-		fetch(api_url+'/user/setrole', {
+		fetch(process.env.REACT_APP_API_URL+'/user/setrole', {
 			method: 'post',
 			headers: {
 				'Content-Type': 'application/json',

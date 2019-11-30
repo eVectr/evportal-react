@@ -1,3 +1,4 @@
+/* NEED TO CONVERT THIS TO REACT CONTEXT */
 import React, { Component } from 'react';
 import io from 'socket.io-client';
 const socket = io(process.env.REACT_APP_SOCKET_URL);

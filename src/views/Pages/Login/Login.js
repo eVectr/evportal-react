@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Button, Card, CardBody, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import logo from '../../../assets/img/brand/header-logo.png'
-import api_url from '../../../config.js'
 
 class Login extends Component {
 	constructor(props) {
@@ -24,7 +23,7 @@ class Login extends Component {
 
 	handleSubmit(event) {
 		event.preventDefault();
-		fetch(api_url+'/login', {
+		fetch(process.env.REACT_APP_API_URL+'/login', {
 			method: 'post',
 			headers: {
 			  'Content-Type': 'application/json'

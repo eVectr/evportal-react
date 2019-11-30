@@ -16,7 +16,6 @@ const defaultProps = {};
 
 class DefaultHeader extends Component {
 	render() {
-		const { children, ...attributes } = this.props;
 		return (
 			<React.Fragment>
 				<AppSidebarToggler className="d-lg-none" display="md" mobile />
@@ -28,7 +27,7 @@ class DefaultHeader extends Component {
 
 				<Nav className="d-md-down-none" navbar>
 				<NavItem className="px-3">
-					eVectr Portal
+					EV Portal
 				</NavItem>
 				{/*<NavItem className="px-3">
 					<NavLink to="/dashboard" className="nav-link" >Dashboard</NavLink>

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Button, Badge, Alert, Card, CardBody, CardHeader, Col, Row, Collapse, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import api_url from '../../config.js';
 import moment from 'moment';
 import Select from 'react-select';
 
@@ -11,7 +10,7 @@ class TicketDetails extends Component {
 		this.state = {
 			error: null,
 			isLoaded: false,
-			items: [],
+			ticketDetails: [],
 			ticketReplies: [],
 			ticketCollapsed: true,
 			dropdownOpen: false,
@@ -52,7 +51,7 @@ class TicketDetails extends Component {
 
 	deleteTicket() {
 		if(localStorage.getItem("token") !== null) {
-			fetch(api_url+'/support/ticket/delete', {
+			fetch(process.env.REACT_APP_API_URL+'/support/ticket/delete', {
 				method: 'post',
 				headers: {
 					'Content-Type': 'application/json',
@@ -91,7 +90,7 @@ class TicketDetails extends Component {
 	handleReply(event) {
 		event.preventDefault();
 		if(localStorage.getItem("token") !== null) {
-			fetch(api_url+'/support/ticket/reply', {
+			fetch(process.env.REACT_APP_API_URL+'/support/ticket/reply', {
 				method: 'post',
 				headers: {
 					'Content-Type': 'application/json',
@@ -104,14 +103,8 @@ class TicketDetails extends Component {
 			}).then(results => results.json()).then(data => {
 				//console.log(data);
 				if(data.success === true) {
-					//alert('message sent');
-					/*this.setState({
-						ticketRedirect: true
-					});*/
 					window.location.reload();
 				} else {
-					//error
-					//alert('woops errror');
 					return false;
 				}
 			});
@@ -125,9 +118,9 @@ class TicketDetails extends Component {
 	
 	markResolved(event) {
 		var r =  window.confirm("Mark this ticket resolved?");
-		if (r == true) {
+		if (r === true) {
 			if(localStorage.getItem("token") !== null) {
-				fetch(api_url+'/support/ticket/update', {
+				fetch(process.env.REACT_APP_API_URL+'/support/ticket/update', {
 					method: 'post',
 					headers: {
 						'Content-Type': 'application/json',
@@ -156,7 +149,7 @@ class TicketDetails extends Component {
 	}
 
 	componentDidMount() {
-		fetch(api_url+'/support/ticket?caseNo='+this.props.match.params.id, {
+		fetch(process.env.REACT_APP_API_URL+'/support/ticket?caseNo='+this.props.match.params.id, {
 			method: 'get',
 				headers: {
 					'Content-Type': 'application/json',
@@ -167,7 +160,7 @@ class TicketDetails extends Component {
 			.then((result) => {
 				this.setState({
 					isLoaded: true,
-					items: result.data,
+					ticketDetails: result.data,
 					ticketReplies: result.replies,
 					user: result.user
 				});
@@ -183,7 +176,7 @@ class TicketDetails extends Component {
 	}
 	
 	render() {
-		const { error, isLoaded, items, user, ticketRedirect, ticketReplies } = this.state;
+		const { error, isLoaded, ticketDetails, user, ticketRedirect, ticketReplies } = this.state;
 		if(error) {
 			return (
 				<div className="animated fadeIn">
@@ -205,7 +198,7 @@ class TicketDetails extends Component {
 				<Redirect to="/support/tickets" />
 			);
 		} else {
-			const ticketData = JSON.parse(items);
+			const ticketData = JSON.parse(ticketDetails);
 			const userData = JSON.parse(user);
 			const replies = JSON.parse(ticketReplies);
 			return (

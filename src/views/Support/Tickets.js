@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Badge, Card, CardBody, CardHeader, Col, Pagination, PaginationItem, PaginationLink, Row, Table } from 'reactstrap';
+import { Badge, Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import api_url from '../../config.js'
 import moment from 'moment';
 
 function TicketRow(props) {
@@ -27,7 +26,7 @@ class SupportTickets extends Component {
 	}
 	
 	componentDidMount() {
-		fetch(api_url+'/support/tickets', {
+		fetch(process.env.REACT_APP_API_URL+'/support/tickets', {
 			method: 'get',
 				headers: {
 					'Content-Type': 'application/json',

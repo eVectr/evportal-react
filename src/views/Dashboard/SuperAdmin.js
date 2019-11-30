@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
-import { Card,CardBody,CardFooter,CardTitle,Col,Row,CardHeader } from 'reactstrap';
-import { SocketConnect } from '../../SocketConnect.js';
+import { Card,CardBody,Col,Row,CardHeader } from 'reactstrap';
+//import { SocketConnect } from '../../SocketConnect.js';
 
 
 class SuperAdmin extends Component {
-	constructor(props) {
+	/*constructor(props) {
 		super(props);
-		SocketConnect((err, connectedUsers) => this.setState({
-			connectedUsers
-		}));
+		// SocketConnect((err, connectedUsers) => this.setState({
+		// 	connectedUsers
+		// }));
 	
-		this.state = {
-			connectedUsers: []
-		};
-	}
+		// this.state = {
+		// 	connectedUsers: []
+		// };
+	}*/
 	render() {
-		const listItems = this.state.connectedUsers.map((user) => <li key={user.UserId}>{user.displayName}</li>);
+		// const listItems = this.state.connectedUsers.map((user) => <li key={user.UserId}>{user.displayName}</li>);
 		return (
 			<div className="animated fadeIn">
 				<Row>
@@ -24,7 +24,7 @@ class SuperAdmin extends Component {
 							<CardHeader>Who's Online</CardHeader>
 							<CardBody>
 							<ul>
-								{listItems}
+								{/*listItems*/}
 							</ul>
 							</CardBody>
 						</Card>
