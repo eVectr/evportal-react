@@ -7,56 +7,54 @@ import { AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import logo from '../../assets/img/brand/header-logo.png'
 import sygnet from '../../assets/img/brand/header-logo.png'
 
+
 const propTypes = {
-  children: PropTypes.node,
+	children: PropTypes.node,
 };
 
 const defaultProps = {};
 
 class DefaultHeader extends Component {
-  render() {
+	render() {
+		const { children, ...attributes } = this.props;
+		return (
+			<React.Fragment>
+				<AppSidebarToggler className="d-lg-none" display="md" mobile />
+				<AppNavbarBrand
+				full={{ src: logo, width: 30, height: 25, alt: 'eVectr Logo' }}
+				minimized={{ src: sygnet, width: 30, height: 25, alt: 'eVectr Logo' }}
+				/>
+				<AppSidebarToggler className="d-md-down-none" display="lg" />
 
-    // eslint-disable-next-line
-    const { children, ...attributes } = this.props;
-
-    return (
-      <React.Fragment>
-        <AppSidebarToggler className="d-lg-none" display="md" mobile />
-        <AppNavbarBrand
-          full={{ src: logo, width: 30, height: 25, alt: 'eVectr Logo' }}
-          minimized={{ src: sygnet, width: 30, height: 25, alt: 'eVectr Logo' }}
-        />
-        <AppSidebarToggler className="d-md-down-none" display="lg" />
-
-        <Nav className="d-md-down-none" navbar>
-          <NavItem className="px-3">
-            eVectr Portal
-          </NavItem>
-          {/*<NavItem className="px-3">
-            <NavLink to="/dashboard" className="nav-link" >Dashboard</NavLink>
-          </NavItem>
-          <NavItem className="px-3">
-            <NavLink to="#" className="nav-link">Settings</NavLink>
-    </NavItem>*/}
-        </Nav>
-        <Nav className="ml-auto" navbar>
-          <UncontrolledDropdown nav direction="down">
-            <DropdownToggle nav style={{marginRight: "20px"}}> 
-              <i className="fa fa-user text-success"></i> Ben Ashton
-            </DropdownToggle>
-            <DropdownMenu right>
-              <DropdownItem header tag="div" className="text-center"><strong>Account</strong></DropdownItem>
-              <DropdownItem><i className="nav-icon fa fa-circle text-success" style={{marginRight: "20px"}}></i> Available</DropdownItem>
-              <DropdownItem><i className="fa fa-tasks"></i> Tickets<Badge color="danger">2</Badge></DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem onClick={e => this.props.onLogout(e)}><i className="fa fa-lock"></i> Logout</DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
-        </Nav>
-        {/*<AppAsideToggler className="d-lg-none" mobile />*/}
-      </React.Fragment>
-    );
-  }
+				<Nav className="d-md-down-none" navbar>
+				<NavItem className="px-3">
+					eVectr Portal
+				</NavItem>
+				{/*<NavItem className="px-3">
+					<NavLink to="/dashboard" className="nav-link" >Dashboard</NavLink>
+				</NavItem>
+				<NavItem className="px-3">
+					<NavLink to="#" className="nav-link">Settings</NavLink>
+			</NavItem>*/}
+				</Nav>
+				<Nav className="ml-auto" navbar>
+				<UncontrolledDropdown nav direction="down">
+					<DropdownToggle nav style={{marginRight: "20px"}}> 
+					<i className="fa fa-user text-success"></i> Ben Ashton
+					</DropdownToggle>
+					<DropdownMenu right>
+					<DropdownItem header tag="div" className="text-center"><strong>Account</strong></DropdownItem>
+					<DropdownItem><i className="nav-icon fa fa-circle text-success" style={{marginRight: "20px"}}></i> Available</DropdownItem>
+					<DropdownItem><i className="fa fa-tasks"></i> Tickets<Badge color="danger">2</Badge></DropdownItem>
+					<DropdownItem divider />
+					<DropdownItem onClick={e => this.props.onLogout(e)}><i className="fa fa-lock"></i> Logout</DropdownItem>
+					</DropdownMenu>
+				</UncontrolledDropdown>
+				</Nav>
+				{/*<AppAsideToggler className="d-lg-none" mobile />*/}
+			</React.Fragment>
+		);
+	}
 }
 
 DefaultHeader.propTypes = propTypes;

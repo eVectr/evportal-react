@@ -18,7 +18,7 @@ import {
 import super_admin_nav from '../../super_admin_nav';
 // routes config
 import routes from '../../routes';
-import api_url from '../../config.js';
+//import api_url from '../../config.js';
 
 //const DefaultAside = React.lazy(() => import('./DefaultAside'));
 const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
@@ -34,10 +34,10 @@ class DefaultLayout extends Component {
 			apiUnavailable: false,
 		};
 	}
-
+	
 	componentDidMount() {
 		if(localStorage.getItem("token") !== null && localStorage.getItem("roles") !== null) {
-			fetch(api_url+'/auth/check', {
+			fetch(process.env.REACT_APP_API_URL+'/auth/check', {
 				method: 'post',
 				headers: {
 					'Content-Type': 'application/json',
