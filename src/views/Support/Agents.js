@@ -17,13 +17,15 @@ function UserRow(props) {
 
 class Agents extends Component {
 
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state = {
 			usersData:[],
-			redirect: false
+			redirect: false,
 		};
 	}
+
+	
 
 	componentDidMount() {
 		fetch(process.env.REACT_APP_API_URL+'/getagents', {
@@ -57,7 +59,7 @@ class Agents extends Component {
 		return (
 			<div className="animated fadeIn">
 			<Row>
-				<Col xl={12}>
+				<Col xl={8}>
 				<Card>
 					<CardHeader>
 					    <i className="fa fa-align-justify"></i> Support Agents

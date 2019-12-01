@@ -2,6 +2,8 @@ import React, { Component, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import * as router from 'react-router-dom';
 import { Container } from 'reactstrap';
+// Socket Connection
+//import { socket } from '../../SocketConnect.js';
 
 import {
 	AppFooter,
@@ -14,6 +16,7 @@ import {
 	AppBreadcrumb2 as AppBreadcrumb,
 	AppSidebarNav2 as AppSidebarNav,
 } from '@coreui/react';
+
 // sidebar nav config
 import super_admin_nav from '../../super_admin_nav';
 import support_super_nav from '../../support_super_nav';
@@ -21,20 +24,21 @@ import support_agent_nav from '../../support_agent_nav';
 
 // routes config
 import routes from '../../routes';
-//import api_url from '../../config.js';
 
-//const DefaultAside = React.lazy(() => import('./DefaultAside'));
 const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
 const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
+
 
 class DefaultLayout extends Component {
 
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			authData: "loading",
 			roles: [],
 			navType: "support_agent_nav",
+			connectedUsers: [],
 			apiUnavailable: false,
 		};
 	}
@@ -61,12 +65,10 @@ class DefaultLayout extends Component {
 					});
 				}  else if (data.auth===true) {
 					const myroles = JSON.parse(data.roles);
-					console.log(data.roles);
 					this.setState({
 						authData: JSON.parse(data.auth),
 						roles: myroles
 					});
-					console.log(myroles);
 					if (myroles.includes('super_admin')) {
 						this.setState({navType: "super_admin_nav"});
 					} else if (myroles.includes('support_super')) {
@@ -74,6 +76,28 @@ class DefaultLayout extends Component {
 					} else if (myroles.includes('support_agent')) {
 						this.setState({navType: "support_agent_nav"});
 					}
+					/*socket.on('getAllConnectedSockets', (res) => {
+						console.log(res);
+					});
+
+					socket.emit("getAllConnectedSockets", (docs) => {
+						console.log("dkahjsdhasdhaskjdhsajkhd")
+						console.log(docs);
+						this.setState({connectedUsers: docs});
+					});*/
+					// Socket Connected Users
+					/*socket.on('connectedUsers', (connectedUsers) => {
+						console.log(connectedUsers);
+						this.setState({connectedUsers: connectedUsers});
+					});*/
+					/*socket.emit("connectedUsers", null, function(err,res) {
+						console.log("test");
+						if(err) {
+							console.log(err);
+						}
+						console.log(res);
+						//this.setState({connectedUsers: []})
+					})*/
 				} else {
 					this.setState({
 						authData: false
@@ -92,25 +116,12 @@ class DefaultLayout extends Component {
 	signOut(e) {
 		e.preventDefault();
 		localStorage.removeItem("token");
+		//socket.close();
 		this.props.history.push('/login');
 	}
 
 	render() {
-		
-		/*var navConfig = function() {
-			switch(navType) {
-				case 'super_admin':
-					return super_admin_nav;
-					break;
-				case 'support_super':
-					return support_super_nav;
-					break;
-				default:
-					return support_agent_nav;
-			}
-		}*/
 		if(this.state.authData === true) {
-			//const navType = this.state.navType;
 			return (
 				<div className="app">
 					<AppHeader fixed>
@@ -131,12 +142,7 @@ class DefaultLayout extends Component {
 											case "support_super_nav":  return support_super_nav;
 											default:      return support_agent_nav;
 										}
-									})()
-									/*()=>{switch(navType){
-									case 'super_admin_nav': return super_admin_nav; break;
-									case 'support_agent_nav': return support_agent_nav; break;
-									default: return support_agent_nav;
-								}}*/} {...this.props} router={router}/>
+									})() } {...this.props} router={router}/>
 							</Suspense>
 							<AppSidebarFooter />
 							<AppSidebarMinimizer />
