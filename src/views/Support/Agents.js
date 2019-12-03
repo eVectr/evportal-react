@@ -24,9 +24,7 @@ class Agents extends Component {
 			redirect: false,
 		};
 	}
-
 	
-
 	componentDidMount() {
 		fetch(process.env.REACT_APP_API_URL+'/getagents', {
 			headers: {
