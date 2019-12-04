@@ -15,7 +15,11 @@ const socket = io(process.env.REACT_APP_SOCKET_URL);
 function WhoIsOnline() {
 	const [ connectedUsers, setConnectedUsers ] = useState([]);
 	const [ myStatusClass, setStatusClass ] = useState("fa fa-user");
-	const connectedUsersList = Object.keys(connectedUsers).map((user_id) => <DropdownItem key={user_id}><i className="nav-icon fa fa-circle text-success" style={{marginRight: "20px"}}></i> {connectedUsers[user_id].displayName}</DropdownItem>);
+	const connectedUsersList = Object.keys(connectedUsers).map((user_id) => 
+		<DropdownItem key={user_id}>
+			<i className="nav-icon fa fa-circle text-success" style={{marginRight: "20px"}}></i>
+			{connectedUsers[user_id].displayName}
+		</DropdownItem>);
 	const [ isLogout, setIsLogout ] = useState(false);
 
 	if(localStorage.getItem("token") !== null && localStorage.getItem("roles") !== null) {
@@ -38,6 +42,10 @@ function WhoIsOnline() {
 							console.log('device disconnected');
 							setConnectedUsers(docs);
 						});
+						socket.on("device status changed", (docs) => {
+							console.log('device status changed');
+							setConnectedUsers(docs);
+						});
 					});
 				});
 			}
@@ -57,7 +65,6 @@ function WhoIsOnline() {
 					</DropdownToggle>
 					<DropdownMenu right>
 						<DropdownItem header tag="div" className="text-center"><strong>Notifications</strong></DropdownItem>
-						<DropdownItem divider />
 						<DropdownItem><i className="fa fa-envelope"></i> Messages<Badge color="danger">2</Badge></DropdownItem>
 						<DropdownItem><i className="fa fa-tasks"></i> Tickets<Badge color="danger">2</Badge></DropdownItem>
 					</DropdownMenu>
@@ -69,35 +76,32 @@ function WhoIsOnline() {
 					<DropdownMenu right>
 						
 						<DropdownItem header tag="div" className="text-center">
-							<strong>My Status</strong>
+							<div className="text-center" style={{marginTop: '6px'}}>
+								<ButtonGroup size="sm">
+									<Button outline color="light" onClick={
+										()=>{
+											setStatusClass("fa fa-user text-success");
+											socket.emit("update status", { status: "Online" });
+										}
+									}><i className="nav-icon fa fa-circle text-success" style={{paddingLeft: '6px',paddingRight: '6px'}}></i></Button>
+									<Button outline color="light" onClick={
+										()=>{
+											setStatusClass("fa fa-user text-warning");
+											socket.emit("update status", { status: "Away" });
+										}
+									}><i className="nav-icon fa fa-circle text-warning" style={{paddingLeft: '6px',paddingRight: '6px'}}></i></Button>
+									<Button outline color="light" onClick={
+										()=>{
+											setStatusClass("fa fa-user text-danger");
+											socket.emit("update status", { status: "Busy" });
+										}
+									}><i className="nav-icon fa fa-circle text-danger" style={{paddingLeft: '6px',paddingRight: '6px'}}></i></Button>
+								</ButtonGroup>
+							</div>
 						</DropdownItem>
 
-						<div className="text-center" style={{marginTop: '6px'}}>
-							<ButtonGroup size="sm">
-								<Button outline color="light" onClick={
-									()=>{
-										setStatusClass("fa fa-user text-success");
-										socket.emit("update status", { status: "Online" });
-									}
-								}><i className="nav-icon fa fa-circle text-success" style={{paddingLeft: '6px',paddingRight: '6px'}}></i></Button>
-								<Button outline color="light" onClick={
-									()=>{
-										setStatusClass("fa fa-user text-warning");
-										socket.emit("update status", { status: "Away" });
-									}
-								}><i className="nav-icon fa fa-circle text-warning" style={{paddingLeft: '6px',paddingRight: '6px'}}></i></Button>
-								<Button outline color="light" onClick={
-									()=>{
-										setStatusClass("fa fa-user text-danger");
-										socket.emit("update status", { status: "Busy" });
-									}
-								}><i className="nav-icon fa fa-circle text-danger" style={{paddingLeft: '6px',paddingRight: '6px'}}></i></Button>
-							</ButtonGroup>
-						</div>
-
-						<DropdownItem divider />
 						<DropdownItem header tag="div" className="text-center">
-							<strong>Currently Online</strong>
+							<strong>People Online</strong>
 						</DropdownItem>
 						
 						{connectedUsersList}
@@ -105,6 +109,7 @@ function WhoIsOnline() {
 						<DropdownItem onClick={(event)=>{
 							localStorage.removeItem("token");
 							socket.close();
+							//window.location.href = "/login";
 							setIsLogout(true);
 							//this.props.history.push('/login');
 						}}><i className="fa fa-lock"></i> Logout</DropdownItem>

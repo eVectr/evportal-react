@@ -76,28 +76,6 @@ class DefaultLayout extends Component {
 					} else if (myroles.includes('support_agent')) {
 						this.setState({navType: "support_agent_nav"});
 					}
-					/*socket.on('getAllConnectedSockets', (res) => {
-						console.log(res);
-					});
-
-					socket.emit("getAllConnectedSockets", (docs) => {
-						console.log("dkahjsdhasdhaskjdhsajkhd")
-						console.log(docs);
-						this.setState({connectedUsers: docs});
-					});*/
-					// Socket Connected Users
-					/*socket.on('connectedUsers', (connectedUsers) => {
-						console.log(connectedUsers);
-						this.setState({connectedUsers: connectedUsers});
-					});*/
-					/*socket.emit("connectedUsers", null, function(err,res) {
-						console.log("test");
-						if(err) {
-							console.log(err);
-						}
-						console.log(res);
-						//this.setState({connectedUsers: []})
-					})*/
 				} else {
 					this.setState({
 						authData: false
