@@ -25,12 +25,6 @@ export default {
 			icon: 'icon-people',
 		},
 		{
-			name: 'Suspended Accounts',
-			url: '/support/suspended-accounts',
-			icon: 'icon-lock',
-			attributes: { disabled: true },
-		},
-		{
 			title: true,
 			name: 'Support',
 			wrapper: {            // optional wrapper object

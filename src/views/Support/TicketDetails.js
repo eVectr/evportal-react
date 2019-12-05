@@ -3,6 +3,8 @@ import { Redirect } from 'react-router-dom';
 import { Button, Badge, Alert, Card, CardBody, CardHeader, Col, Row, Collapse, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import moment from 'moment';
 import Select from 'react-select';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class TicketDetails extends Component {
 	constructor(props) {
@@ -14,12 +16,13 @@ class TicketDetails extends Component {
 			ticketReplies: [],
 			ticketCollapsed: true,
 			dropdownOpen: false,
-			availableAgents: [{value: 14, label: "Arian Johnson"},{value: 17, label: "Franklin Smith"},{value: 2, label: "Ben Ashton"}],
+			availableAgents: [],
 			fadeIn: true,
 			deleteDialogOpen: false,
 			assignDialogOpen: false,
 			replyMessage: "",
 			ticketRedirect: false,
+			assignTicketTo: 0,
 			timeout: 300
 		};
 		this.toggleCardCollapse = this.toggleCardCollapse.bind(this);
@@ -31,6 +34,7 @@ class TicketDetails extends Component {
 		this.toggleAssignDialog = this.toggleAssignDialog.bind(this); // Assign ticket dialog
 		this.deleteTicket = this.deleteTicket.bind(this); // Perform delete action
 		this.assignTicket = this.assignTicket.bind(this); // Perform assign action
+		this.handleSelectChange = this.handleSelectChange.bind(this); // 
 	}
 
 	toggleCardCollapse() {
@@ -78,13 +82,42 @@ class TicketDetails extends Component {
 		}
 	}
 
-	assignTicket() {
-		alert('WOOOAH NELLY hold on there bud');
+	assignTicket(event) {
+		event.preventDefault();
+		if(localStorage.getItem("token") !== null) {
+			fetch(process.env.REACT_APP_API_URL+'/support/ticket/assign', {
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/json',
+					'x-access-token': localStorage.getItem('token')
+				},
+				body: JSON.stringify({
+					"caseNo" : this.props.match.params.id,
+					"agent" : this.state.assignTicketTo
+				})
+			}).then(results => results.json()).then(data => {
+				if(data.success === true) {
+					this.toggleAssignDialog();
+					toast("Ticket assigned to agent", {containerId: 'toastMessages'});
+				} else {
+					return false;
+				}
+			});
+		} else {
+			this.setState({
+				authData: false
+			});
+			return false;
+		}
 	}
 
 	handleReplyChange(event) {
 		// Dynamically sets the state's key/value from whence it came (event)
 		this.setState({ replyMessage: event.target.value });
+	}
+
+	handleSelectChange(event) {
+		this.setState({ assignTicketTo: event.value });
 	}
 
 	handleReply(event) {
@@ -162,7 +195,8 @@ class TicketDetails extends Component {
 					isLoaded: true,
 					ticketDetails: result.data,
 					ticketReplies: result.replies,
-					user: result.user
+					user: result.user,
+					availableAgents: result.availableAgents
 				});
 				//console.log(JSON.parse(result.replies));
 		},
@@ -276,7 +310,7 @@ class TicketDetails extends Component {
 					<Modal isOpen={this.state.assignDialogOpen} toggle={this.toggleAssignDialog} className={'modal-md ' + this.props.className}>
 						<ModalHeader toggle={this.toggleAssignDialog}>Assign Ticket to Agent</ModalHeader>
 						<ModalBody>
-							<Select options={this.state.availableAgents} />
+							<Select name="assignToAgent" id="assignToAgent" onChange={this.handleSelectChange} options={JSON.parse(this.state.availableAgents)} />
 						</ModalBody>
 						<ModalFooter>
 							<Button color="primary" onClick={this.assignTicket}>Assign</Button>
@@ -293,6 +327,7 @@ class TicketDetails extends Component {
 							<Button color="secondary" onClick={this.toggleDeleteDialog}>Cancel</Button>
 						</ModalFooter>
 					</Modal>
+					<ToastContainer enableMultiContainer containerId={'toastMessages'} position={toast.POSITION.TOP_RIGHT} />
 				</div>
 			);
 		}

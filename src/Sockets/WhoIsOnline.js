@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ButtonGroup, Button, Badge, UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav } from 'reactstrap';
 import io from 'socket.io-client';
+
 const socket = io(process.env.REACT_APP_SOCKET_URL);
 
 function WhoIsOnline() {
@@ -21,7 +22,7 @@ function WhoIsOnline() {
 			{connectedUsers[user_id].displayName}
 		</DropdownItem>);
 	const [ isLogout, setIsLogout ] = useState(false);
-
+	
 	if(localStorage.getItem("token") !== null && localStorage.getItem("roles") !== null) {
 		var token = localStorage.getItem("token");
 			console.log("Authenticating socket...");
@@ -46,6 +47,9 @@ function WhoIsOnline() {
 							console.log('device status changed');
 							setConnectedUsers(docs);
 						});
+						/*socket.on("ticket assigned", (data) => {
+							toast(data.message, {containerId: 'toastMessages'});
+						});*/
 					});
 				});
 			}
@@ -74,7 +78,6 @@ function WhoIsOnline() {
 						<i className={myStatusClass}></i> People
 					</DropdownToggle>
 					<DropdownMenu right>
-						
 						<DropdownItem header tag="div" className="text-center">
 							<div className="text-center" style={{marginTop: '6px'}}>
 								<ButtonGroup size="sm">
@@ -99,18 +102,18 @@ function WhoIsOnline() {
 								</ButtonGroup>
 							</div>
 						</DropdownItem>
-
 						<DropdownItem header tag="div" className="text-center">
 							<strong>People Online</strong>
 						</DropdownItem>
 						
 						{connectedUsersList}
 						
-						<DropdownItem onClick={(event)=>{
+						<DropdownItem onClick={(event)=> {
 							localStorage.removeItem("token");
 							socket.close();
+							window.location.reload();
 							//window.location.href = "/login";
-							setIsLogout(true);
+							//setIsLogout(true);
 							//this.props.history.push('/login');
 						}}><i className="fa fa-lock"></i> Logout</DropdownItem>
 					</DropdownMenu>

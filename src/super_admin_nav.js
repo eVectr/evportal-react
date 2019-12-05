@@ -23,11 +23,6 @@ export default {
 			name: 'Account Management',
 			url: '/users',
 			icon: 'icon-user',
-		},	
-		{
-			name: 'Broadcast Message',
-			url: '/users',
-			icon: 'icon-envelope',
 		},
 		{
 			title: true,
@@ -42,12 +37,6 @@ export default {
 			name: 'Support Agents',
 			url: '/support/agents',
 			icon: 'icon-people',
-		},
-		{
-			name: 'Suspended Accounts',
-			url: '/support/suspended-accounts',
-			icon: 'icon-lock',
-			attributes: { disabled: true },
 		},
 		{
 			title: true,
