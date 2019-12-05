@@ -1,31 +1,23 @@
 import React, { Component } from 'react';
 import { Card,CardBody,Col,Row,CardHeader } from 'reactstrap';
-//import { SocketConnect } from '../../SocketConnect.js';
-
+import Iframe from 'react-iframe'
 
 class SuperAdmin extends Component {
-	/*constructor(props) {
-		super(props);
-		// SocketConnect((err, connectedUsers) => this.setState({
-		// 	connectedUsers
-		// }));
-	
-		// this.state = {
-		// 	connectedUsers: []
-		// };
-	}*/
 	render() {
-		// const listItems = this.state.connectedUsers.map((user) => <li key={user.UserId}>{user.displayName}</li>);
 		return (
 			<div className="animated fadeIn">
 				<Row>
 					<Col sm="6">
 						<Card>
-							<CardHeader>Who's Online</CardHeader>
+							<CardHeader>Server Resources</CardHeader>
 							<CardBody>
-							<ul>
-								{/*listItems*/}
-							</ul>
+								<Iframe url="https://evportal.bashton.ca/netdata.html"
+									width="100%"
+									id="serverStatus"
+									className="serverStatus"
+									display="initial"
+									position="relative"
+								/>
 							</CardBody>
 						</Card>
 					</Col>
