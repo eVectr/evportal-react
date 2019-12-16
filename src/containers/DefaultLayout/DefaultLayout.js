@@ -22,6 +22,9 @@ import super_admin_nav from '../../super_admin_nav';
 import support_super_nav from '../../support_super_nav';
 import support_agent_nav from '../../support_agent_nav';
 
+// toastify CSS
+import 'react-toastify/dist/ReactToastify.css';
+
 // routes config
 import routes from '../../routes';
 

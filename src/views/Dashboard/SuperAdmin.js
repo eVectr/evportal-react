@@ -9,7 +9,7 @@ class SuperAdmin extends Component {
 				<Row>
 					<Col sm="6">
 						<Card>
-							<CardHeader>Server Resources</CardHeader>
+							<CardHeader>Server Status</CardHeader>
 							<CardBody>
 								<Iframe url="https://evportal.bashton.ca/netdata.html"
 									width="100%"

@@ -4,7 +4,6 @@ import { Button, Badge, Alert, Card, CardBody, CardHeader, Col, Row, Collapse, I
 import moment from 'moment';
 import Select from 'react-select';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 class TicketDetails extends Component {
 	constructor(props) {
@@ -20,9 +19,11 @@ class TicketDetails extends Component {
 			fadeIn: true,
 			deleteDialogOpen: false,
 			assignDialogOpen: false,
+			escalateDialogOpen: false,
 			replyMessage: "",
 			ticketRedirect: false,
 			assignTicketTo: 0,
+			escalateReason: '',
 			timeout: 300
 		};
 		this.toggleCardCollapse = this.toggleCardCollapse.bind(this);
@@ -32,9 +33,12 @@ class TicketDetails extends Component {
 		this.toggleDropdown = this.toggleDropdown.bind(this);
 		this.toggleDeleteDialog = this.toggleDeleteDialog.bind(this); // Delete ticket confirmation
 		this.toggleAssignDialog = this.toggleAssignDialog.bind(this); // Assign ticket dialog
+		this.toggleEscalateDialog = this.toggleEscalateDialog.bind(this); // Escalate ticket dialog
 		this.deleteTicket = this.deleteTicket.bind(this); // Perform delete action
 		this.assignTicket = this.assignTicket.bind(this); // Perform assign action
-		this.handleSelectChange = this.handleSelectChange.bind(this); // 
+		this.escalateTicket = this.escalateTicket.bind(this); // Perform escalation action
+		this.handleSelectChange = this.handleSelectChange.bind(this); // Assign to agent select
+		this.handleEscalateReasonChange = this.handleEscalateReasonChange.bind(this); // Escalation reason select
 	}
 
 	toggleCardCollapse() {
@@ -46,11 +50,15 @@ class TicketDetails extends Component {
 	}
 
 	toggleDeleteDialog() {
-		this.setState({ deleteDialogOpen: !this.state.deleteDialogOpen});
+		this.setState({ deleteDialogOpen: !this.state.deleteDialogOpen });
 	}
 
 	toggleAssignDialog() {
-		this.setState({ assignDialogOpen: !this.state.assignDialogOpen});
+		this.setState({ assignDialogOpen: !this.state.assignDialogOpen });
+	}
+
+	toggleEscalateDialog() {
+		this.setState({ escalateDialogOpen: !this.state.escalateDialogOpen });
 	}
 
 	deleteTicket() {
@@ -98,7 +106,36 @@ class TicketDetails extends Component {
 			}).then(results => results.json()).then(data => {
 				if(data.success === true) {
 					this.toggleAssignDialog();
-					toast("Ticket assigned to agent", {containerId: 'toastMessages'});
+					toast("Ticket was assigned!", {containerId: 'toastMessages'});
+				} else {
+					return false;
+				}
+			});
+		} else {
+			this.setState({
+				authData: false
+			});
+			return false;
+		}
+	}
+
+	escalateTicket(event) {
+		event.preventDefault();
+		if(localStorage.getItem("token") !== null) {
+			fetch(process.env.REACT_APP_API_URL+'/support/ticket/escalate', {
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/json',
+					'x-access-token': localStorage.getItem('token')
+				},
+				body: JSON.stringify({
+					"caseNo" : this.props.match.params.id,
+					"escalateReason" : this.state.escalateReason
+				})
+			}).then(results => results.json()).then(data => {
+				if(data.success === true) {
+					this.toggleEscalateDialog();
+					toast("Ticket has been escalated", {containerId: 'toastMessages'});
 				} else {
 					return false;
 				}
@@ -118,6 +155,10 @@ class TicketDetails extends Component {
 
 	handleSelectChange(event) {
 		this.setState({ assignTicketTo: event.value });
+	}
+
+	handleEscalateReasonChange(event) {
+		this.setState({ escalateReason: event.value });
 	}
 
 	handleReply(event) {
@@ -235,6 +276,13 @@ class TicketDetails extends Component {
 			const ticketData = JSON.parse(ticketDetails);
 			const userData = JSON.parse(user);
 			const replies = JSON.parse(ticketReplies);
+			const escalateOptions = [
+				{ value: 'account', label: 'Account Related' },
+				{ value: 'billing', label: 'Billing Issue' },
+				{ value: 'support', label: 'Technical Issue' },
+				{ value: 'violation', label: 'Violations' },
+				{ value: 'other', label: 'Other' },
+			];
 			return (
 				<div className="animated fadeIn">
 					<Row>
@@ -250,6 +298,9 @@ class TicketDetails extends Component {
 											<DropdownMenu>
 												<DropdownItem header>
 													Ticket Actions
+												</DropdownItem>
+												<DropdownItem  onClick={this.toggleEscalateDialog}>
+													<i className="fa fa-flag"></i> Escalate Ticket
 												</DropdownItem>
 												<DropdownItem  onClick={this.toggleAssignDialog}>
 													<i className="fa fa-share"></i> Assign Ticket
@@ -325,6 +376,16 @@ class TicketDetails extends Component {
 						<ModalFooter>
 							<Button color="danger" onClick={this.deleteTicket}>DELETE</Button>{' '}
 							<Button color="secondary" onClick={this.toggleDeleteDialog}>Cancel</Button>
+						</ModalFooter>
+					</Modal>
+					<Modal isOpen={this.state.escalateDialogOpen} toggle={this.toggleEscalateDialog} className={'modal-md ' + this.props.className}>
+						<ModalHeader toggle={this.toggleEscalateDialog}>Escalate Ticket</ModalHeader>
+						<ModalBody>
+							<Select name="escalateReason" id="escalateReason" onChange={this.handleEscalateReasonChange} options={escalateOptions} />
+						</ModalBody>
+						<ModalFooter>
+							<Button color="primary" onClick={this.escalateTicket}>Escalate</Button>
+							<Button color="secondary" onClick={this.toggleEscalateDialog}>Cancel</Button>
 						</ModalFooter>
 					</Modal>
 					<ToastContainer enableMultiContainer containerId={'toastMessages'} position={toast.POSITION.TOP_RIGHT} />
