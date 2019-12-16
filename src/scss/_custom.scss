@@ -47,7 +47,7 @@ body {
 	}
 
 	.main {
-		background-image: url('./assets/img/different-hues-of-color-of-the-sky-2847648.jpg');
+		background-image: url('../assets/img/different-hues-of-color-of-the-sky-2847648.jpg');
 		background-size: cover;
 		.breadcrumb {
 			background-color: #0f101a;
@@ -71,5 +71,10 @@ body {
 
 	.serverStatus {
 		border: none;
+	}
+
+	.Toastify__toast--default {
+
+		color: #464646;
 	}
 }
