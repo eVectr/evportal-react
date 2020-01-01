@@ -6,6 +6,7 @@ const User = React.lazy(() => import('./views/Users/User'));
 const SupportTickets = React.lazy(() => import('./views/Support/Tickets'));
 const TicketDetails = React.lazy(() => import('./views/Support/TicketDetails'));
 const Agents = React.lazy(() => import('./views/Support/Agents'));
+const Escalations = React.lazy(() => import('./views/Support/Escalations'));
 const routes = [
 	{ path: '/', exact: true, name: 'Home' },
 	{ path: '/dashboard', name: 'Dashboard', component: Dashboard },
@@ -14,6 +15,7 @@ const routes = [
 	{ path: '/support/tickets', name: 'Support Tickets', component: SupportTickets },
 	{ path: '/support/ticket/:id', exact: true, name: 'TicketDetails', component: TicketDetails },
 	{ path: '/support/agents', name: 'Support Agents', component: Agents },
+	{ path: '/support/escalations', name: 'Ticket Escalations', component: Escalations },
 ];
 
 export default routes;

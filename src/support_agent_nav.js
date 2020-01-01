@@ -20,7 +20,7 @@ export default {
 			class: ''             // optional class names space delimited list for title item ex: "text-center"
 		},
 		{
-			name: 'Support Tickets',
+			name: 'Open Tickets',
 			url: '/support/tickets',
 			icon: 'icon-note',
 		},
